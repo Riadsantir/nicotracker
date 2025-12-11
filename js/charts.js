@@ -75,8 +75,16 @@ function renderFocusAnxietyChart(logs) {
         },
         options: {
             responsive: true,
-            maintainAspectRatio: true,
-            aspectRatio: 2,
+            maintainAspectRatio: false,
+            aspectRatio: window.innerWidth < 768 ? 1.2 : 2,
+            layout: {
+                padding: {
+                    left: window.innerWidth < 768 ? 5 : 10,
+                    right: window.innerWidth < 768 ? 5 : 10,
+                    top: window.innerWidth < 768 ? 10 : 20,
+                    bottom: window.innerWidth < 768 ? 10 : 20
+                }
+            },
             plugins: {
                 legend: {
                     display: true,
@@ -103,7 +111,8 @@ function renderFocusAnxietyChart(logs) {
                     ticks: {
                         color: '#a0aec0',
                         font: {
-                            family: 'Inter, sans-serif'
+                            family: 'Inter, sans-serif',
+                            size: window.innerWidth < 768 ? 11 : 12
                         }
                     },
                     grid: {
@@ -116,7 +125,8 @@ function renderFocusAnxietyChart(logs) {
                     ticks: {
                         color: '#a0aec0',
                         font: {
-                            family: 'Inter, sans-serif'
+                            family: 'Inter, sans-serif',
+                            size: window.innerWidth < 768 ? 11 : 12
                         },
                         stepSize: 1
                     },
@@ -370,4 +380,15 @@ function updateAllCharts() {
     renderFocusAnxietyChart(logs);
     renderSweetSpotHeatmap(logs);
 }
+
+// Handle window resize for charts
+let resizeTimeout;
+window.addEventListener('resize', () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+        if (focusAnxietyChart) {
+            focusAnxietyChart.resize();
+        }
+    }, 250);
+});
 
