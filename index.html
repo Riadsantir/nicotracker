@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NicoTracker - Track Your Nicotine Intake</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+    <!-- Top App Bar -->
+    <header class="app-bar">
+        <div class="app-bar-content">
+            <div class="logo-container" id="logoContainer" style="cursor: pointer;">
+                <img src="assets/nicoTracker-logo.svg" alt="NicoTracker Logo" class="logo">
+                <h1 class="app-title">NicoTracker</h1>
+            </div>
+            <nav class="desktop-nav" id="desktopNav">
+                <button class="nav-link" data-view="dashboardView">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                    <span>Dashboard</span>
+                </button>
+                <button class="nav-link" data-view="cognitiveView">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                    </svg>
+                    <span>Cognitive</span>
+                </button>
+                <button class="nav-link" data-view="analyticsView">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="20" x2="18" y2="10"></line>
+                        <line x1="12" y1="20" x2="12" y2="4"></line>
+                        <line x1="6" y1="20" x2="6" y2="14"></line>
+                    </svg>
+                    <span>Analytics</span>
+                </button>
+            </nav>
+            <div class="app-bar-actions">
+                <button class="icon-btn" id="settingsBtn" aria-label="Settings" title="Settings">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                </button>
+                <button class="icon-btn" id="infoBtn" aria-label="Info" title="About">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M12 16v-4"></path>
+                        <path d="M12 8h.01"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Dashboard View -->
+        <section id="dashboardView" class="view active">
+            <div class="dashboard-container">
+                <!-- Body Battery Card -->
+                <div class="body-battery-card">
+                    <div class="battery-ring-container">
+                        <svg class="battery-ring" viewBox="0 0 200 200">
+                            <defs>
+                                <filter id="glow">
+                                    <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+                                    <feMerge>
+                                        <feMergeNode in="coloredBlur"/>
+                                        <feMergeNode in="SourceGraphic"/>
+                                    </feMerge>
+                                </filter>
+                                <filter id="innerGlow">
+                                    <feGaussianBlur stdDeviation="8" result="coloredBlur"/>
+                                    <feMerge>
+                                        <feMergeNode in="coloredBlur"/>
+                                    </feMerge>
+                                </filter>
+                            </defs>
+                            <!-- Background ring -->
+                            <circle class="ring-bg" cx="100" cy="100" r="85" fill="none" stroke="rgba(20, 27, 45, 0.8)" stroke-width="12"></circle>
+                            <!-- Progress ring with solid cyan color and glow -->
+                            <circle class="ring-progress" cx="100" cy="100" r="85" fill="none" stroke="#00d4ff" stroke-width="12" 
+                                    stroke-linecap="round" stroke-dasharray="534" stroke-dashoffset="534" transform="rotate(-90 100 100)" filter="url(#glow)"></circle>
+                            <!-- Inner glow circle -->
+                            <circle cx="100" cy="100" r="60" fill="none" stroke="rgba(0, 212, 255, 0.15)" stroke-width="1" filter="url(#innerGlow)"></circle>
+                        </svg>
+                        <div class="battery-content">
+                            <div class="battery-status" id="batteryStatus">Great Start</div>
+                            <div class="battery-percentage" id="batteryPercentage">0%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Log Intake Button -->
+                <button class="btn-primary btn-large" id="logIntakeBtn">
+                    <span>Log Intake</span>
+                </button>
+
+                <!-- Stats Row -->
+                <div class="stats-row">
+                    <!-- Daily Limit Progress -->
+                    <div class="limit-card">
+                        <div class="limit-header">
+                            <span class="limit-label">Daily Mg Limit</span>
+                            <span class="limit-value" id="limitValue">0 / 40 mg</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                    </div>
+
+                    <!-- Streak Indicator -->
+                    <div class="streak-card">
+                        <div class="streak-icon">🔥</div>
+                        <div class="streak-content">
+                            <div class="streak-label">Data Streak</div>
+                            <div class="streak-days" id="streakDays">0 Days</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cognitive Check-in View -->
+        <section id="cognitiveView" class="view">
+            <div class="cognitive-container">
+                <div class="cognitive-header">
+                    <h2>Cognitive Check-in</h2>
+                    <p class="subtitle">Track how nicotine affects your mental state</p>
+                </div>
+
+                <div class="cognitive-form">
+                    <div class="form-group">
+                        <label for="focusSlider" class="form-label">
+                            Focus Level <span id="focusValue" class="value-display">5</span>
+                        </label>
+                        <input type="range" id="focusSlider" min="1" max="10" value="5" class="slider">
+                        <div class="slider-labels">
+                            <span>Low</span>
+                            <span>High</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="anxietySlider" class="form-label">
+                            Anxiety Level <span id="anxietyValue" class="value-display">5</span>
+                        </label>
+                        <input type="range" id="anxietySlider" min="1" max="10" value="5" class="slider">
+                        <div class="slider-labels">
+                            <span>Low</span>
+                            <span>High</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Clear Thinking?</label>
+                        <div class="toggle-group">
+                            <button class="toggle-btn" id="clearThinkingYes" data-value="true">Yes</button>
+                            <button class="toggle-btn" id="clearThinkingNo" data-value="false">No</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cognitiveNotes" class="form-label">Notes (optional)</label>
+                        <textarea id="cognitiveNotes" class="textarea" rows="4" placeholder="Any additional thoughts..."></textarea>
+                    </div>
+
+                    <button class="btn-primary btn-large" id="submitCognitiveBtn">
+                        Submit & Link to Latest Event
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Analytics View -->
+        <section id="analyticsView" class="view">
+            <div class="analytics-container">
+                <div class="analytics-header">
+                    <h2>Analytics Insights</h2>
+                    <p class="subtitle">Understand your patterns</p>
+                </div>
+
+                <!-- Line Chart -->
+                <div class="chart-card">
+                    <h3 class="chart-title">Focus vs Anxiety by Time of Day</h3>
+                    <canvas id="focusAnxietyChart"></canvas>
+                </div>
+
+                <!-- Sweet Spot Heatmap -->
+                <div class="chart-card">
+                    <h3 class="chart-title">Sweet Spot Correlation</h3>
+                    <p class="chart-subtitle">Higher focus & lower anxiety = better zone</p>
+                    <div id="heatmapContainer" class="heatmap-container"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <button class="nav-item active" data-view="dashboardView">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+            <span>Dashboard</span>
+        </button>
+        <button class="nav-item" data-view="cognitiveView">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+            </svg>
+            <span>Cognitive</span>
+        </button>
+        <button class="nav-item" data-view="analyticsView">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="20" x2="18" y2="10"></line>
+                <line x1="12" y1="20" x2="12" y2="4"></line>
+                <line x1="6" y1="20" x2="6" y2="14"></line>
+            </svg>
+            <span>Analytics</span>
+        </button>
+    </nav>
+
+    <!-- Log Intake Wizard Modal -->
+    <div id="wizardModal" class="modal">
+        <div class="modal-content wizard-content">
+            <div class="wizard-header">
+                <h2 id="wizardTitle">Log Intake</h2>
+                <button class="modal-close" id="closeWizard">&times;</button>
+            </div>
+
+            <div class="wizard-steps">
+                <!-- Step 1: Source & Quantity -->
+                <div class="wizard-step active" id="step1">
+                    <h3>Select Source & Quantity</h3>
+                    <div class="source-options">
+                        <label class="source-option">
+                            <input type="radio" name="source" value="Vape" required>
+                            <div class="source-card">
+                                <div class="source-icon">💨</div>
+                                <div class="source-name">Vape</div>
+                            </div>
+                        </label>
+                        <label class="source-option">
+                            <input type="radio" name="source" value="Cigarettes" required>
+                            <div class="source-card">
+                                <div class="source-icon">🚬</div>
+                                <div class="source-name">Cigarettes</div>
+                            </div>
+                        </label>
+                        <label class="source-option">
+                            <input type="radio" name="source" value="Snus" required>
+                            <div class="source-card">
+                                <div class="source-icon">📦</div>
+                                <div class="source-name">Snus</div>
+                            </div>
+                        </label>
+                    </div>
+
+                    <div class="form-group" id="quantityGroup" style="display: none;">
+                        <label for="quantity" class="form-label" id="quantityLabel">Quantity</label>
+                        <input type="number" id="quantity" min="1" class="input" placeholder="Enter quantity">
+                    </div>
+
+                    <div class="form-group" id="strengthGroup" style="display: none;">
+                        <label for="strengthSlider" class="form-label">
+                            Nicotine Strength <span id="strengthValue" class="value-display">0</span> mg
+                        </label>
+                        <input type="range" id="strengthSlider" min="0" max="50" value="0" step="0.5" class="slider">
+                        <div class="slider-labels">
+                            <span>0 mg</span>
+                            <span>50 mg</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2: Health Effects -->
+                <div class="wizard-step" id="step2">
+                    <h3>Health Effects</h3>
+                    <div class="checkbox-group">
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="healthEffects" value="Reduced stress">
+                            <span>Reduced stress</span>
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="healthEffects" value="Dizziness">
+                            <span>Dizziness</span>
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="healthEffects" value="Better focus">
+                            <span>Better focus</span>
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="healthEffects" value="Nausea">
+                            <span>Nausea</span>
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="healthEffects" value="Alertness">
+                            <span>Alertness</span>
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="healthEffects" value="Headache">
+                            <span>Headache</span>
+                        </label>
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="healthEffects" value="No noticeable effect">
+                            <span>No noticeable effect</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Step 3: Reason -->
+                <div class="wizard-step" id="step3">
+                    <h3>Reason / Context</h3>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="reason" value="Just woke up / habit" required>
+                            <span>Just woke up / habit</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="reason" value="Stress" required>
+                            <span>Stress</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="reason" value="Studying / focus" required>
+                            <span>Studying / focus</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="reason" value="Partying / social" required>
+                            <span>Partying / social</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="reason" value="Boredom" required>
+                            <span>Boredom</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="reason" value="Other" required>
+                            <span>Other</span>
+                        </label>
+                    </div>
+                    <div class="form-group" id="otherReasonGroup" style="display: none;">
+                        <input type="text" id="otherReason" class="input" placeholder="Specify reason">
+                    </div>
+                </div>
+
+                <!-- Step 4: Confirmation -->
+                <div class="wizard-step" id="step4">
+                    <h3>Confirm Details</h3>
+                    <div class="confirmation-card">
+                        <div class="confirmation-row">
+                            <span class="confirmation-label">Time:</span>
+                            <span class="confirmation-value" id="confirmTime"></span>
+                        </div>
+                        <div class="confirmation-row">
+                            <span class="confirmation-label">Source:</span>
+                            <span class="confirmation-value" id="confirmSource"></span>
+                        </div>
+                        <div class="confirmation-row">
+                            <span class="confirmation-label">Quantity:</span>
+                            <span class="confirmation-value" id="confirmQuantity"></span>
+                        </div>
+                        <div class="confirmation-row">
+                            <span class="confirmation-label">Strength:</span>
+                            <span class="confirmation-value" id="confirmStrength"></span>
+                        </div>
+                        <div class="confirmation-row">
+                            <span class="confirmation-label">Estimated Mg:</span>
+                            <span class="confirmation-value" id="confirmEstimatedMg"></span>
+                        </div>
+                        <div class="confirmation-row">
+                            <span class="confirmation-label">Health Effects:</span>
+                            <span class="confirmation-value" id="confirmHealthEffects"></span>
+                        </div>
+                        <div class="confirmation-row">
+                            <span class="confirmation-label">Reason:</span>
+                            <span class="confirmation-value" id="confirmReason"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="wizard-footer">
+                <button class="btn-secondary" id="wizardPrev" style="display: none;">Previous</button>
+                <button class="btn-primary" id="wizardNext">Next</button>
+                <button class="btn-primary" id="wizardConfirm" style="display: none;">Confirm & Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Settings</h2>
+                <button class="modal-close" id="closeSettings">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="dailyMgLimit" class="form-label">Daily Nicotine Limit (mg)</label>
+                    <input type="number" id="dailyMgLimit" min="1" class="input" value="40">
+                </div>
+                <div class="form-group">
+                    <label for="dailyEventLimit" class="form-label">Daily Event Limit</label>
+                    <input type="number" id="dailyEventLimit" min="1" class="input" value="5">
+                </div>
+                <div class="form-group">
+                    <button class="btn-primary" id="saveSettingsBtn">Save Settings</button>
+                </div>
+                <div class="form-group">
+                    <button class="btn-secondary" id="exportDataBtn">Export Data</button>
+                </div>
+                <div class="form-group">
+                    <label for="importDataBtn" class="btn-secondary" style="display: inline-block; cursor: pointer;">
+                        Import Data
+                        <input type="file" id="importDataBtn" accept=".json" style="display: none;">
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Info Modal -->
+    <div id="infoModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>About NicoTracker</h2>
+                <button class="modal-close" id="closeInfo">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>NicoTracker is a personal tracking tool designed to help users become more aware of their nicotine consumption patterns and perceived effects.</p>
+                <p><strong>Important:</strong> This application is <strong>not</strong> medical advice. It is a self-tracking tool for personal awareness and reflection.</p>
+                <p>By logging your intake and cognitive states, you can identify patterns and make more informed decisions about your nicotine use.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <!-- Scripts -->
+    <script src="js/storage.js"></script>
+    <script src="js/charts.js"></script>
+    <script src="js/mockData.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
+
