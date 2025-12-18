@@ -18,6 +18,16 @@ let wizardData = {
  * Initialize the application
  */
 function initApp() {
+    // FORCE CLEANUP: Remove any existing mock/sample data from previous versions
+    const logs = loadLogs();
+    const hasSampleData = logs.some(log => log.id && String(log.id).startsWith('sample-'));
+    if (hasSampleData) {
+        console.log('Cleaning up old sample data...');
+        localStorage.removeItem('nicotracker_logs');
+        // Optional: also reset settings if they were modified by mock logic
+        // localStorage.removeItem('nicotracker_settings');
+    }
+
     // Set up event listeners
     setupEventListeners();
     
