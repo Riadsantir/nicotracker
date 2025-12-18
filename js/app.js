@@ -18,9 +18,6 @@ let wizardData = {
  * Initialize the application
  */
 function initApp() {
-    // Initialize sample data if needed
-    initializeSampleData();
-    
     // Set up event listeners
     setupEventListeners();
     
